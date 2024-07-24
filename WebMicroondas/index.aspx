@@ -26,7 +26,6 @@
         .small-textbox {
             font-size: 12px;
         }
-        /* Adiciona uma classe CSS para programas customizados */
         .programa-customizado {
             font-style: italic;
         }
