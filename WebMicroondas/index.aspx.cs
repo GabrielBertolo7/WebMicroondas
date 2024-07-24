@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using WebMicroondas.DataXML;
 
 namespace WebMicroondas
 {
@@ -26,7 +27,7 @@ namespace WebMicroondas
         private void InicializarServico()
         {
             if (webMicroondasServico == null)
-                webMicroondasServico = new WebMicroondasServico(new Data());
+                webMicroondasServico = new WebMicroondasServico(new DataXml());
         }
 
         private void InicializarViewState()
@@ -43,7 +44,7 @@ namespace WebMicroondas
 
         protected void NumeroButton_Click(object sender, EventArgs e)
         {
-            //Não permite adicionar números quando algum programa pré-definido está selecionado.
+            //Não permite adicionar números quando algum programa pré-definido está selecionado
             bool isProgramasPreDefinidos = ViewState["isProgramasPreDefinidos"] != null && (bool)ViewState["isProgramasPreDefinidos"];
             if (isProgramasPreDefinidos)
                 return;
@@ -86,7 +87,6 @@ namespace WebMicroondas
             return $"{minuto:D2}.{segundo:D2}";
         }
 
-
         protected void Limpa_Button_Click(object sender, EventArgs e)
         {
             Tempo_Label.Text = "00.00";
@@ -96,6 +96,7 @@ namespace WebMicroondas
             InicializarViewState();
             Instrucoes_Label.Text = "";
             ProgramasDropDownList.SelectedIndex = 0;
+            AtualizarDropDownList();
         }
 
         protected void Ligar_Button_Click1(object sender, EventArgs e)
@@ -117,7 +118,7 @@ namespace WebMicroondas
             if (Convert.ToInt32(tempo.Split('.')[0]) > 59 || Convert.ToInt32(tempo.Split('.')[1]) > 59)
                 tempo = ConverterParaFormatoValidoDeHoras(tempo);
 
-            //Validar se o tempo máximo (2 minutos) foi excedido, com exceção dos programas pré-definidos
+            //Validar se o tempo máximo (2 minutos) foi excedido, com exceção dos programas pré-definidos ou adicionados manualmente
             int tempoSelecionado = ConverterParaSegundos(tempo);
             bool isProgramasPreDefinidos = ViewState["isProgramasPreDefinidos"] != null && (bool)ViewState["isProgramasPreDefinidos"];
             if (tempoSelecionado > 120 && !isProgramasPreDefinidos)
@@ -133,8 +134,8 @@ namespace WebMicroondas
             {
                 tempoSelecionado = Convert.ToInt32(ConverterParaSegundos(TempoHiddenField.Value)) + 30;
 
-                //Garantir que o tempo não exceda 2 minutos
-                if (tempoSelecionado > 120)
+                //Garantir que o tempo não exceda 2 minutos, com exceção dos programas pré-definidos ou adicionados manualmente
+                if (tempoSelecionado > 120 && !isProgramasPreDefinidos)
                     tempoSelecionado = 120;
             }
 
@@ -142,7 +143,7 @@ namespace WebMicroondas
             int potenciaValor;
             bool isNumero = int.TryParse(potencia, out potenciaValor);
 
-            //Validar se a potência está em formato correto ou não excedeu o limite (10)
+            //Validar se a potência está em formato correto, não excedeu o limite (10) ou mínimo (1)
             if (!isNumero || potenciaValor < 1 || potenciaValor > 10)
             {
                 //Se for um programa pré-definido ou cadastrado manualmente, ignora
@@ -161,6 +162,7 @@ namespace WebMicroondas
 
             //Passar o valor como número inteiro para JavaScript
             ScriptManager.RegisterStartupScript(this, GetType(), "CronometroJS", $"startTimer({tempoSelecionado}, false);", true);
+            AtualizarDropDownList();
         }
 
         private void AtualizarViewState(int tempoAtual)
@@ -186,12 +188,21 @@ namespace WebMicroondas
 
             if (programa != null)
             {
-                Tempo_Label.Text = ConverterParaFormatoValidoDeHoras(programa.Tempo.ToString());
+                Tempo_Label.Text = ConverterParaFormatoMinutosSegundos(programa.Tempo);
                 Potencia_TextBox.Text = programa.Potencia.ToString();
                 Instrucoes_Label.Text = programa.Instrucoes;
 
                 ViewState["isProgramasPreDefinidos"] = true;
             }
+
+            AtualizarDropDownList();
+        }
+
+        private string ConverterParaFormatoMinutosSegundos(int segundosTotais)
+        {
+            int minutos = segundosTotais / 60;
+            int segundos = segundosTotais % 60;
+            return $"{minutos:D2}.{segundos:D2}";
         }
 
         private int ConverterParaSegundos(string tempo)
@@ -209,6 +220,7 @@ namespace WebMicroondas
             ViewState["tempoRestante"] = ConverterParaSegundos(tempo);
             ViewState["isIniciado"] = false;
             ScriptManager.RegisterStartupScript(this, GetType(), "pauseTimer", "pauseTimer();", true);
+            AtualizarDropDownList();
         }
 
         protected void Cadastrar_Button_Click(object sender, EventArgs e)
@@ -258,7 +270,9 @@ namespace WebMicroondas
                 Potencia = potencia,
                 Tempo = tempo,
                 StringAquecimento = caractere,
-                Instrucoes = instrucoes
+                Instrucoes = instrucoes,
+                LiberarExcederTempoMaximo = true,
+                IsAdicionadoManualmente = true
             };
 
             webMicroondasServico.CadastrarPrograma(novoPrograma);
@@ -281,14 +295,29 @@ namespace WebMicroondas
 
         private void AtualizarDropDownList()
         {
+            InicializarServico();
+
             var programas = webMicroondasServico.ObterTodosProgramas();
             ProgramasDropDownList.Items.Clear();
             ProgramasDropDownList.Items.Add(new ListItem("Selecione:", ""));
+
             if (programas != null)
-            { 
+            {
                 foreach (var programa in programas)
                 {
-                    ProgramasDropDownList.Items.Add(new ListItem(programa.Nome, programa.Nome));
+                    var listItem = new ListItem
+                    {
+                        Text = programa.Nome,
+                        Value = programa.Nome
+                    };
+
+                    //Verifica se o programa foi adicionado manualmente e aplica a fonte em itálico
+                    if (programa.IsAdicionadoManualmente)
+                    {
+                        listItem.Attributes.Add("class", "programa-customizado");
+                    }
+
+                    ProgramasDropDownList.Items.Add(listItem);
                 }
             }
         }

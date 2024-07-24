@@ -67,12 +67,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DataXML\WebMicroondasData.xml" />
     <Content Include="index.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AquecimentoPreDefinido.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="DataSql.cs" />
+    <Compile Include="DataXML\DataXml.cs" />
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

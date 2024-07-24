@@ -5,11 +5,11 @@ using System.Configuration;
 
 namespace WebMicroondas
 {
-    public class Data
+    public class DataSql
     {
         private string connectionString;
 
-        public Data()
+        public DataSql()
         {
             connectionString = ConfigurationManager.ConnectionStrings["Microondas"].ConnectionString;
         }

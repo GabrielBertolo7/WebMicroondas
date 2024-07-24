@@ -19,17 +19,16 @@
             padding: 0;
             background-color: lightgray; 
         }
-        .italico {
-            font-style: italic;
-        }
         .small-label {
             font-size: 12px;
             margin-right: 10px;
         }
-
         .small-textbox {
             font-size: 12px;
-            width: 150px;
+        }
+        /* Adiciona uma classe CSS para programas customizados */
+        .programa-customizado {
+            font-style: italic;
         }
     </style>
     <script type="text/javascript">
@@ -117,22 +116,22 @@
         <asp:Label ID="ErroCadastro_Label" runat="server" Text="Preencha todos os campos corretamente." CssClass="small-textbox"></asp:Label> <br />
         
         <label for="Nome_TextBox" class="small-label">Nome:</label>
-        <asp:TextBox ID="Nome_TextBox" runat="server" CssClass="small-textbox"></asp:TextBox> <br />
+        <asp:TextBox ID="Nome_TextBox" runat="server" CssClass="small-textbox" Width="169px"></asp:TextBox> <br />
         
         <label for="Alimento_TextBox" class="small-label">Alimento:</label>
-        <asp:TextBox ID="Alimento_TextBox" runat="server" CssClass="small-textbox"></asp:TextBox> <br />
+        <asp:TextBox ID="Alimento_TextBox" runat="server" CssClass="small-textbox" Width="152px"></asp:TextBox> <br />
         
         <label for="PotenciaNovoPrograma_TextBox" class="small-label">Potência:</label>
-        <asp:TextBox ID="PotenciaNovoPrograma_TextBox" runat="server" CssClass="small-textbox"></asp:TextBox> <br />
+        <asp:TextBox ID="PotenciaNovoPrograma_TextBox" runat="server" CssClass="small-textbox" Width="153px"></asp:TextBox> <br />
         
         <label for="Tempo_TextBox" class="small-label">Tempo:</label>
-        <asp:TextBox ID="Tempo_TextBox" runat="server" CssClass="small-textbox"></asp:TextBox> <br />
+        <asp:TextBox ID="Tempo_TextBox" runat="server" CssClass="small-textbox" Width="162px"></asp:TextBox> <br />
         
         <label for="Caractere_TextBox" class="small-label">Caractere:</label>
-        <asp:TextBox ID="Caractere_TextBox" runat="server" CssClass="small-textbox"></asp:TextBox> <br />
+        <asp:TextBox ID="Caractere_TextBox" runat="server" CssClass="small-textbox" Width="149px"></asp:TextBox> <br />
         
         <label for="Instrucoes_TextBox" class="small-label">Instruções:</label>
-        <asp:TextBox ID="Instrucoes_TextBox" runat="server" CssClass="small-textbox"></asp:TextBox> <br />
+        <asp:TextBox ID="Instrucoes_TextBox" runat="server" CssClass="small-textbox" Width="143px"></asp:TextBox> <br />
 
         <asp:Button ID="Cadastrar_Button" runat="server" Text="Cadastrar Programa" OnClick="Cadastrar_Button_Click" />
     </form>

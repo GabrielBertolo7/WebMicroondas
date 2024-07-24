@@ -15,5 +15,6 @@ namespace WebMicroondas
         public string Instrucoes { get; set; }
         public string StringAquecimento { get; set; }
         public bool LiberarExcederTempoMaximo { get; set; }
+        public bool IsAdicionadoManualmente { get; set; }
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAquecimentoPreDefinido xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AquecimentoPreDefinido>
+    <Id>0</Id>
+    <Nome>Cachorrao</Nome>
+    <Alimento>Cachorro quente</Alimento>
+    <Tempo>60</Tempo>
+    <Potencia>22</Potencia>
+    <Instrucoes />
+    <StringAquecimento>abcd</StringAquecimento>
+    <LiberarExcederTempoMaximo>true</LiberarExcederTempoMaximo>
+    <IsAdicionadoManualmente>true</IsAdicionadoManualmente>
+  </AquecimentoPreDefinido>
+</ArrayOfAquecimentoPreDefinido>
